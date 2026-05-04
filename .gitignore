@@ -1,0 +1,8 @@
+# Local config overrides (contain personal paths / credentials)
+config/*.local.conf
+
+# Log files generated at runtime
+logs/
+
+# Lock file
+*.lock
