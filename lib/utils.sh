@@ -83,7 +83,7 @@ human_size() {
 
 # ---------------------------------------------------------------------------
 # send_notification <status> <message>
-#   Sends a desktop and/or email notification if enabled in config.
+#   Sends a desktop notification if enabled in config.
 # ---------------------------------------------------------------------------
 function send_notification() {
     local status="$1"
@@ -92,17 +92,6 @@ function send_notification() {
     if [[ "${NOTIFY_DESKTOP:-false}" == "true" ]]; then
         if command -v notify-send &>/dev/null; then
             notify-send "File Backup Sync [${status}]" "$message"
-        fi
-    fi
-
-    if [[ "${NOTIFY_EMAIL:-false}" == "true" ]]; then
-        if command -v mail &>/dev/null; then
-            echo "$message" | mail \
-                -s "${NOTIFY_EMAIL_SUBJECT:-[Backup] Sync report}" \
-                -r "${NOTIFY_EMAIL_FROM:-backup@localhost}" \
-                "${NOTIFY_EMAIL_TO:-root}"
-        else
-            log_warn "Email notification requested but 'mail' is not installed."
         fi
     fi
 }

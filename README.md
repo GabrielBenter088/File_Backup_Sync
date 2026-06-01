@@ -1,6 +1,6 @@
 # File Backup & Sync
 
-A Bash script that syncs one or more local directories to a **NAS** (via `rsync`) or a **cloud remote** (via `rclone`). It features configurable logging, lock-file protection, desktop/email notifications, and automatic log rotation.
+A Bash script that syncs one or more local directories to a **NAS** (via `rsync`) or a **cloud remote** (via `rclone`). It features configurable logging, lock-file protection, desktop notifications, and automatic log rotation.
 
 ---
 
@@ -46,7 +46,6 @@ Key settings in `config.local.conf`:
 | `RCLONE_DEST` | `remote:path` for rclone |
 | `LOG_RETENTION` | How many monthly log files to keep |
 | `NOTIFY_DESKTOP` | `true` to enable desktop notifications |
-| `NOTIFY_EMAIL` | `true` to enable email reports |
 
 ### 3. Install dependencies
 
