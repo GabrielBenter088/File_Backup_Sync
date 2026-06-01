@@ -88,6 +88,7 @@ chmod +x sync.sh
 ./sync.sh --help
 ```
 
+
 ---
 
 ## Automate with cron

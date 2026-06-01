@@ -38,6 +38,7 @@ source "${SCRIPT_DIR}/lib/utils.sh"
 # ---------------------------------------------------------------------------
 CONFIG_FILE="${SCRIPT_DIR}/config/config.conf"
 DRY_RUN=false
+USER_INPUT=false
 
 # ---------------------------------------------------------------------------
 # Parse arguments
@@ -50,6 +51,7 @@ usage() {
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -c|--config)  CONFIG_FILE="$2"; shift 2 ;;
+        -s|--self)    USER_INPUT=true; shift ;;
         -n|--dry-run) DRY_RUN=true;     shift   ;;
         -v|--verbose) LOG_LEVEL="DEBUG"; shift   ;;
         -h|--help)    usage ;;
@@ -60,6 +62,11 @@ done
 # ---------------------------------------------------------------------------
 # Load configuration
 # ---------------------------------------------------------------------------
+if [[ "$USER_INPUT" == true ]]; then
+    get_user_input
+    CONFIG_FILE="${SCRIPT_DIR}/config/temp_config.conf"
+fi
+
 if [[ ! -f "$CONFIG_FILE" ]]; then
     log_error "Config file not found: ${CONFIG_FILE}"
     exit 1
@@ -123,8 +130,8 @@ case "${DEST_TYPE:-rsync}" in
 esac
 
 # Validate source directories
-# shellcheck disable=SC2086
-validate_sources $SOURCE_DIRS || exit 1
+IFS=' ' read -r -a source_dirs <<< "${SOURCE_DIRS:-}"
+validate_sources "${source_dirs[@]}" || exit 1
 
 # Acquire lock to prevent concurrent runs
 acquire_lock
@@ -163,7 +170,7 @@ sync_rclone() {
 # ---------------------------------------------------------------------------
 # Main sync loop
 # ---------------------------------------------------------------------------
-for dir in $SOURCE_DIRS; do
+for dir in "${source_dirs[@]}"; do
     log_info "Processing: ${dir}"
     case "${DEST_TYPE}" in
         rsync)  sync_rsync  "$dir" ;;

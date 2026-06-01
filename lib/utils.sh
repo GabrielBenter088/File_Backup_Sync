@@ -85,7 +85,7 @@ human_size() {
 # send_notification <status> <message>
 #   Sends a desktop and/or email notification if enabled in config.
 # ---------------------------------------------------------------------------
-send_notification() {
+function send_notification() {
     local status="$1"
     local message="$2"
 
@@ -105,4 +105,28 @@ send_notification() {
             log_warn "Email notification requested but 'mail' is not installed."
         fi
     fi
+}
+
+# ---------------------------------------------------------------------------
+# gets the user input for a custom config config file
+# ---------------------------------------------------------------------------
+function get_user_input() {
+    local temp_config="${SCRIPT_DIR:-.}/config/temp_config.conf"
+    read -p "Enter Source Directories (space-separated): " src_input
+    read -p "Enter Destination Directory: " dest_input
+    read -p "Enter Destination Type (rsync/rclone): " dest_type_input
+
+    touch "$temp_config"
+    {
+        echo "SOURCE_DIRS=\"$src_input\""
+        echo "DEST_TYPE='$dest_type_input'"
+        if [[ "$dest_type_input" == "rsync" ]]; then
+            echo "RSYNC_DEST='$dest_input'"
+        elif [[ "$dest_type_input" == "rclone" ]]; then
+            echo "RCLONE_DEST='$dest_input'"
+        fi
+    } > "$temp_config"
+
+    log_info "Temporary config file created at ${temp_config}"
+    
 }
