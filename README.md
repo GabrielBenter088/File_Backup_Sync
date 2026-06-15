@@ -110,7 +110,3 @@ Logs are written to `logs/sync_YYYYMM.log` (one file per month). Old files are
 removed automatically according to `LOG_RETENTION` (default: keep last 6 months).
 
 ---
-
-## License
-
-MIT
